@@ -4,13 +4,16 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
+import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.GridLayout;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintSet;
 
 import com.petro.scope101.R;
 import com.petro.scope101.util.TextValidator;
@@ -21,6 +24,7 @@ public class EnterPasswordActivity extends AppCompatActivity {
     private EditText password;
     private Button button;
     private TextView lower, symbol, upper, eight, number;
+    private GridLayout gridLayout;
 
     public static void startForResultExplicit(Activity context, int requestCode) {
         Intent starter = new Intent(context, EnterPasswordActivity.class);
@@ -29,7 +33,7 @@ public class EnterPasswordActivity extends AppCompatActivity {
     }
 
     public static void startForResultImplicit(Activity context, int requestCode) {
-        Intent intent = new Intent("ENTER_PASSWORD");
+        Intent intent = new Intent(context.getString(R.string.action_enter_password));
         context.startActivityForResult(intent, requestCode);
     }
 
@@ -44,6 +48,7 @@ public class EnterPasswordActivity extends AppCompatActivity {
         upper = findViewById(R.id.uppercase);
         eight = findViewById(R.id.eight);
         number = findViewById(R.id.number);
+        gridLayout = findViewById(R.id.checkLayout);
         password.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_DONE && button.isEnabled()) {
                 button.performClick();
@@ -68,12 +73,13 @@ public class EnterPasswordActivity extends AppCompatActivity {
     }
 
     private void verifyPassword(String password) {
-        button.setEnabled(TextValidator.isValidPassword(password));
-
+        boolean isValid = TextValidator.isValidPassword(password);
+        button.setEnabled(isValid);
         lower.setEnabled(TextValidator.hasLowercase(password));
         symbol.setEnabled(TextValidator.hasSymbol(password));
         eight.setEnabled(TextValidator.hasEightCharacters(password));
         number.setEnabled(TextValidator.hasNumber(password));
         upper.setEnabled(TextValidator.hasUppercase(password));
+        gridLayout.setVisibility(isValid? View.GONE: View.VISIBLE);
     }
 }

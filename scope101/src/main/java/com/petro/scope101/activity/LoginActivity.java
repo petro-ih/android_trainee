@@ -28,11 +28,11 @@ public class LoginActivity extends AppCompatActivity {
         findViewById(R.id.button).setOnClickListener(v -> EnterEmailActivity.startForResult(LoginActivity.this, REQUEST_CODE));
         findViewById(R.id.signout).setOnClickListener(v -> {
             sharedPref.edit().clear().apply();
-            ShowLogin();
+            showLogin();
         });
         sharedPref = getSharedPreferences(KEY_SHARED_PREFERENCES, MODE_PRIVATE);
         if (sharedPref.getString(KEY_EMAIL, null) != null && sharedPref.getString(KEY_PASSWORD, null) != null) {
-            ShowCredentionals(sharedPref.getString(KEY_EMAIL, null), sharedPref.getString(KEY_PASSWORD, null));
+            showCredentionals(sharedPref.getString(KEY_EMAIL, null), sharedPref.getString(KEY_PASSWORD, null));
         }
     }
 
@@ -44,11 +44,11 @@ public class LoginActivity extends AppCompatActivity {
             String email = data.getStringExtra(KEY_EMAIL);
 
             sharedPref.edit().putString(KEY_EMAIL, email).putString(KEY_PASSWORD, password).apply();
-            ShowCredentionals(email, password);
+            showCredentionals(email, password);
         }
     }
 
-    private void ShowCredentionals(String email, String password) {
+    private void showCredentionals(String email, String password) {
         this.<TextView>findViewById(R.id.descriprion).setText(R.string.welcome);
         TextView emailyour = findViewById(R.id.emailyour);
         emailyour.setText(email);
@@ -62,7 +62,7 @@ public class LoginActivity extends AppCompatActivity {
         this.<Button>findViewById(R.id.signout).setVisibility(View.VISIBLE);
     }
 
-    private void ShowLogin() {
+    private void showLogin() {
         this.<TextView>findViewById(R.id.descriprion).setText(R.string.create_account_in_our_superapp);
         findViewById(R.id.emailyour).setVisibility(View.GONE);
         findViewById(R.id.passwordyour).setVisibility(View.GONE);

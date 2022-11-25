@@ -15,7 +15,7 @@
             android:name="com.petro.scope101.activity.EnterPasswordActivity"
             android:exported="true">
             <intent-filter>
-                <action android:name="ENTER_PASSWORD" />
+                <action android:name="@string/action_enter_password" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
