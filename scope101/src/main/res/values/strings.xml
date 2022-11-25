@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">Scope101</string>
+    <string name="buttonText">go!</string>
+    <string name="type_text">Type text</string>
+    <string name="open_activity_b">Open activity B</string>
+    <string name="go_back_to_a">Go back to A</string>
+    <string name="openbimplicit">OpenBImplicit</string>
+    <string name="serializable">Serializable</string>
+    <string name="create_account_in_our_superapp">Create account in our\nSuperApp!</string>
+    <string name="create_account">Create account</string>
+    <string name="what_s_your_email">What’s your email?</string>
+    <string name="enter_email_description">Enter your email for account recovery and enhanced security. We don’t spam.</string>
+    <string name="set_password">Set Password</string>
+    <string name="set_password_desctiption">Set a strong password for enhanced security and to access UltraVPN on other devices</string>
+    <string name="continue_petro_loh">Continue</string>
+    <string name="sign_out">Sign out</string>
+    <string name="welcome">Welcome back to our SuperApp!</string>
+    <string name="email">Email</string>
+    <string name="todo">TODO</string>
+    <string name="your_email">Your email:</string>
+    <string name="lowercase">1 lowercase character</string>
+    <string name="symbol">1 symbol</string>
+    <string name="characters">8+ characters</string>
+    <string name="uppercase">1 uppercase character</string>
+    <string name="number">1 number</string>
+</resources>
