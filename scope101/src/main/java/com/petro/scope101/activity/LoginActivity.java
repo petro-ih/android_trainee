@@ -11,20 +11,28 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.petro.scope101.R;
 
+import java.text.SimpleDateFormat;
+import java.util.Locale;
+
 public class LoginActivity extends AppCompatActivity {
     private static final int REQUEST_CODE = 111;
     private static final String KEY_SHARED_PREFERENCES = "com.trainee.scope101.PREFERENCE_FILE_KEY";
+    private static final String KEY_TIME = "Time";
+    long currentTime;
+    private TextView appStart;
     private SharedPreferences sharedPref;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        appStart = findViewById(R.id.appStartTime);
         findViewById(R.id.button).setOnClickListener(v -> EnterEmailActivity.startForResult(LoginActivity.this, REQUEST_CODE));
         findViewById(R.id.signout).setOnClickListener(v -> {
             sharedPref.edit().clear().apply();
@@ -34,6 +42,10 @@ public class LoginActivity extends AppCompatActivity {
         if (sharedPref.getString(KEY_EMAIL, null) != null && sharedPref.getString(KEY_PASSWORD, null) != null) {
             showCredentionals(sharedPref.getString(KEY_EMAIL, null), sharedPref.getString(KEY_PASSWORD, null));
         }
+        currentTime = savedInstanceState == null ? System.currentTimeMillis() : savedInstanceState.getLong(KEY_TIME);
+        SimpleDateFormat formator = new SimpleDateFormat("dd MMMM yyyy hh:mm:ss", Locale.getDefault());
+        String time = formator.format(currentTime);
+        appStart.setText(time);
     }
 
     @Override
@@ -70,5 +82,11 @@ public class LoginActivity extends AppCompatActivity {
         this.<TextView>findViewById(R.id.password).setVisibility(View.GONE);
         this.<Button>findViewById(R.id.button).setVisibility(View.VISIBLE);
         this.<Button>findViewById(R.id.signout).setVisibility(View.GONE);
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putLong(KEY_TIME, currentTime);
     }
 }
