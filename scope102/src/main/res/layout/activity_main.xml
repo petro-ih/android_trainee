@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/hello_petro_chose_your_broadcast_program" />
+
+    <LinearLayout
+        android:id="@+id/Buttons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="24dp"
+        android:layout_gravity="center"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/BroadcastReceiverProgram1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/one" />
+
+        <Button
+            android:id="@+id/BroadcastReceiverProgram2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/two" />
+
+        <Button
+            android:id="@+id/BroadcastReceiverProgram3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/three" />
+
+        <Button
+            android:id="@+id/BroadcastReceiverProgram4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/four" />
+
+        <Button
+            android:id="@+id/BroadcastReceiverProgram5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/five" />
+
+        <Button
+            android:id="@+id/BroadcastReceiverProgram6"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/six" />
+
+        <Button
+            android:id="@+id/BroadcastReceiverProgram7"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/seven" />
+
+        <Button
+            android:id="@+id/BroadcastReceiverProgram8"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/eight" />
+
+        <Button
+            android:id="@+id/BroadcastReceiverProgram9"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/nine" />
+
+        <Button
+            android:id="@+id/BroadcastReceiverProgram10"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/ten" />
+    </LinearLayout>
+    <ImageView
+        android:id="@+id/image_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        />
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
