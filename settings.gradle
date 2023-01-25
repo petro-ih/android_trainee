@@ -15,3 +15,4 @@ dependencyResolutionManagement {
 rootProject.name = "Trainee"
 include ':scope101'
 include ':scope102'
+include ':scope103'
