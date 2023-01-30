@@ -1,0 +1,17 @@
+package com.petro.scope104.network.response;
+
+
+import com.google.gson.annotations.SerializedName;
+
+public class UserResponse{
+    @SerializedName("city")
+    public String city;
+    @SerializedName("country")
+    public String country;
+    @SerializedName("name")
+    public UserNameResponse name;
+    @SerializedName("dob")
+    public UserDobResponse dob;
+    @SerializedName("picture")
+    public UserPictureResponse picture;
+}
