@@ -6,7 +6,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
-public class Activity extends AppCompatActivity {
+public class Activity extends AppCompatActivity implements WorkerListFragment.WorkerListInteractions {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -14,5 +14,10 @@ public class Activity extends AppCompatActivity {
         ViewPager viewPager = findViewById(R.id.pager);
         viewPager.setAdapter(new MyFragmentAdapter(getSupportFragmentManager()));
 
+    }
+
+    @Override
+    public void onItemClick(WorkerUi workerUi) {
+        UserDetailsActivity.start(this, workerUi);
     }
 }

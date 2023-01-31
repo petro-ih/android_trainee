@@ -11,11 +11,23 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class WorkerListAdapter extends RecyclerView.Adapter<WorkerListAdapter.WorkerViewHolder> {
     private final List<WorkerUi> data = new ArrayList<>();
+
+    interface OnClickListener {
+        void onClick(WorkerUi clickedItem);
+    }
+
+    private OnClickListener callback;
+
+    public void setOnClickListener(OnClickListener callback) {
+        this.callback = callback;
+    }
 
     void setData(List<WorkerUi> newData) {
         data.clear();
@@ -34,6 +46,13 @@ public class WorkerListAdapter extends RecyclerView.Adapter<WorkerListAdapter.Wo
     @Override
     public void onBindViewHolder(@NonNull WorkerViewHolder holder, int position) {
         holder.bind(data.get(position));
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (callback != null)
+                    callback.onClick(data.get(position));
+            }
+        });
     }
 
     @Override
@@ -42,7 +61,7 @@ public class WorkerListAdapter extends RecyclerView.Adapter<WorkerListAdapter.Wo
     }
 
     class WorkerViewHolder extends RecyclerView.ViewHolder {
-
+        private final SimpleDateFormat format = new SimpleDateFormat("dd MMMM yyyy", Locale.getDefault());
         public WorkerViewHolder(@NonNull View itemView) {
             super(itemView);
         }
@@ -54,7 +73,8 @@ public class WorkerListAdapter extends RecyclerView.Adapter<WorkerListAdapter.Wo
             TextView tvDate = itemView.findViewById(R.id.date);
             TextView tvCity = itemView.findViewById(R.id.city);
             tvName.setText(item.getName());
-            tvDate.setText(item.getDob().toString());
+            String dateText = String.format(Locale.getDefault(),"%s, %d years", format.format(item.getDob()), item.getAge());
+            tvDate.setText(dateText);
             tvCity.setText(item.getCity());
         }
     }

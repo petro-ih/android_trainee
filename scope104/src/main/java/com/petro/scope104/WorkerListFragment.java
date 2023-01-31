@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -39,6 +40,10 @@ public class WorkerListFragment extends Fragment {
         return fragment;
     }
 
+    interface WorkerListInteractions{
+        void onItemClick(WorkerUi workerUi);
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -51,6 +56,7 @@ public class WorkerListFragment extends Fragment {
         ListType listType = ((ListType) getArguments().getSerializable(KEY_TYPE));
         RecyclerView rv = view.findViewById(R.id.listOfWorkers);
         final SwipeRefreshLayout pullToRefresh = view.findViewById(R.id.pullToRefresh);
+        pullToRefresh.setColorSchemeColors(ContextCompat.getColor(getContext(), R.color.purple_500));
         pullToRefresh.setOnRefreshListener(() -> {
             refreshData();
             pullToRefresh.setRefreshing(false);
@@ -68,9 +74,16 @@ public class WorkerListFragment extends Fragment {
         }
         rv.setAdapter(adapter);
         refreshData();
+        adapter.setOnClickListener(new WorkerListAdapter.OnClickListener() {
+            @Override
+            public void onClick(WorkerUi clickedItem) {
+                ((WorkerListInteractions) getActivity()).onItemClick(clickedItem);
+            }
+        });
     }
+    private int i = 0;
     private void refreshData(){
-        RetrofitInstance.INSTANCE.service.listRepos("ua", 0, 100, "seed").enqueue(new Callback<UserListResponse>() {
+        RetrofitInstance.INSTANCE.service.listRepos("ua", 0, 100, "seed" + i++).enqueue(new Callback<UserListResponse>() {
             @Override
             public void onResponse(Call<UserListResponse> call, Response<UserListResponse> response) {
                 List<WorkerUi> list = new ArrayList<>();
@@ -78,9 +91,11 @@ public class WorkerListFragment extends Fragment {
                 for (UserResponse user : r.results) {
                     list.add(new WorkerUi(
                             user.picture.medium,
+                            user.picture.large,
                             user.name.first +" "+ user.name.last,
                             user.dob.date,
-                            user.city + user.country
+                            user.location.city + ", " + user.location.country,
+                            user.dob.age, user.phone, user.login.username, user.email, user.nat, user.registered.date
                     ));
                 }
                 adapter.setData(list);

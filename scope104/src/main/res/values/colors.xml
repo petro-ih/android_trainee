@@ -7,4 +7,9 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="black_250">#1B1B1B</color>
+    <color name="icon">#3C3C3C</color>
+    <color name="phone">#33C4ED</color>
+    <color name="cardView">#19212C</color>
+    <color name="separator">#24303F</color>
 </resources>
