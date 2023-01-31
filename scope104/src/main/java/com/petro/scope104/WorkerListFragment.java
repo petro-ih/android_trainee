@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.petro.scope104.network.RetrofitInstance;
 import com.petro.scope104.network.response.UserListResponse;
@@ -28,7 +29,8 @@ import retrofit2.Response;
 
 public class WorkerListFragment extends Fragment {
     private static final String KEY_TYPE = "KEY_TYPE";
-    private ListType listType;
+    private final WorkerListAdapter adapter = new WorkerListAdapter();;
+
     public static Fragment newInstance(ListType type) {
         Bundle args = new Bundle();
         args.putSerializable(KEY_TYPE, type);
@@ -46,8 +48,13 @@ public class WorkerListFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        listType = ((ListType) getArguments().getSerializable(KEY_TYPE));
+        ListType listType = ((ListType) getArguments().getSerializable(KEY_TYPE));
         RecyclerView rv = view.findViewById(R.id.listOfWorkers);
+        final SwipeRefreshLayout pullToRefresh = view.findViewById(R.id.pullToRefresh);
+        pullToRefresh.setOnRefreshListener(() -> {
+            refreshData();
+            pullToRefresh.setRefreshing(false);
+        });
         switch (listType) {
             case LINEAR:
                 rv.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -59,8 +66,10 @@ public class WorkerListFragment extends Fragment {
                 rv.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
                 break;
         }
-        WorkerListAdapter adapter = new WorkerListAdapter();
         rv.setAdapter(adapter);
+        refreshData();
+    }
+    private void refreshData(){
         RetrofitInstance.INSTANCE.service.listRepos("ua", 0, 100, "seed").enqueue(new Callback<UserListResponse>() {
             @Override
             public void onResponse(Call<UserListResponse> call, Response<UserListResponse> response) {
@@ -75,8 +84,6 @@ public class WorkerListFragment extends Fragment {
                     ));
                 }
                 adapter.setData(list);
-
-
             }
 
             @Override
@@ -86,5 +93,4 @@ public class WorkerListFragment extends Fragment {
             }
         });
     }
-
 }

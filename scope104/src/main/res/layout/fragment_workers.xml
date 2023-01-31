@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/pullToRefresh"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -9,9 +10,10 @@
         android:id="@+id/listOfWorkers"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:itemCount="100"
-        tools:orientation="vertical"
-        tools:spanCount="2"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:listitem="@layout/item_workers"/>
-</androidx.constraintlayout.widget.ConstraintLayout>
+        tools:itemCount="100"
+        tools:listitem="@layout/item_workers"
+        tools:orientation="vertical"
+        tools:spanCount="2" />
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
