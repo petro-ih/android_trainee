@@ -3,6 +3,7 @@ package com.petro.scope104;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -51,6 +52,21 @@ public class UserDetailsActivity extends AppCompatActivity {
         binding.btnMail.tvText.setText(R.string.email);
         binding.btnMap.ivIcon.setImageResource(R.drawable.ic_map);
         binding.btnMap.tvText.setText(R.string.map);
+
+        IntentHelper intentHelper = new IntentHelper(this);
+        binding.btnPhone.getRoot().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(intentHelper.getPhoneIntent(workerUi.getPhone()));
+            }
+        });
+        binding.btnMail.getRoot().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(intentHelper.getEmail(workerUi.getEmail(), null, null, null));
+            }
+        });
+
     }
 
     @Override
