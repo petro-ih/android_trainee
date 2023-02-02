@@ -12,5 +12,6 @@ public interface GitHubService {
           @Query("nat") String nationality,
           @Query("page") int page,
           @Query("results") int limit,
-          @Query("seed") String seed);
+          @Query("seed") String seed
+  );
 }

@@ -1,21 +1,20 @@
-package com.petro.scope104;
-
-import com.google.gson.annotations.SerializedName;
+package com.petro.scope104.ui;
 
 import java.io.Serializable;
 import java.util.Date;
 
 public class WorkerUi implements Serializable {
-    private String avatarUrl, avatarUrlXXL;
+    private String avatarUrl;
+    private final String avatarUrlXXL;
     private String name;
     private Date dob;
-    private int age;
+    private final int age;
     private String city;
-    private String phone;
-    private String username;
-    private String email;
-    private String nat;
-    private Date registered;
+    private final String phone;
+    private final String username;
+    private final String email;
+    private final String nat;
+    private final Date registered;
 
     public WorkerUi(String avatarUrl, String avatarUrlXXL, String name, Date dob, String city, int age, String phone, String username, String email, String nat, Date registered) {
         this.avatarUrl = avatarUrl;
@@ -70,6 +69,7 @@ public class WorkerUi implements Serializable {
     public String getAvatarUrlXXL() {
         return avatarUrlXXL;
     }
+
     public String getPhone() {
         return phone;
     }

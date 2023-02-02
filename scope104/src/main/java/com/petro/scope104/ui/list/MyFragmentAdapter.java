@@ -1,5 +1,6 @@
-package com.petro.scope104;
+package com.petro.scope104.ui.list;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
@@ -9,6 +10,7 @@ public class MyFragmentAdapter extends FragmentPagerAdapter {
         super(fm);
     }
 
+    @NonNull
     @Override
     public Fragment getItem(int i) {
         return WorkerListFragment.newInstance(ListType.values()[i]);

@@ -1,4 +1,4 @@
-package com.petro.scope104;
+package com.petro.scope104.util;
 
 import android.content.Context;
 import android.content.Intent;
@@ -41,5 +41,12 @@ public class IntentHelper {
         if (filePath != null)
             intent.putExtra(Intent.EXTRA_STREAM, FileProvider.getUriForFile(context, context.getPackageName() + ".provider", new File(filePath)));
         return intent;
+    }
+
+    public Intent getMaps(String address) {
+        Uri gmmIntentUri = Uri.parse("geo:0,0?q=" + address);
+        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+        mapIntent.setPackage("com.google.android.apps.maps");
+        return mapIntent;
     }
 }

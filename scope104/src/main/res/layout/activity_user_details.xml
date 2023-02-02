@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black_250">
+    android:background="#040014">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -40,6 +40,7 @@
             android:gravity="center_horizontal"
             android:textColor="#8C8A8A"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/name"
             tools:text="registered 12 Jan 2019" />
@@ -48,17 +49,14 @@
             android:id="@+id/buttons"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
             android:layout_marginTop="16dp"
+            android:layout_marginEnd="24dp"
             android:gravity="center_horizontal"
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/registered">
-
-            <Space
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:layout_weight="1" />
 
             <include
                 android:id="@+id/btnPhone"
@@ -91,28 +89,23 @@
                 android:layout_height="64dp"
                 android:layout_weight="3" />
 
-            <Space
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:layout_weight="1" />
-
         </LinearLayout>
 
         <androidx.cardview.widget.CardView
             android:id="@+id/profileDetails"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
+            android:layout_marginStart="24dp"
             android:layout_marginTop="15dp"
-            android:layout_marginEnd="15dp"
+            android:layout_marginEnd="24dp"
             app:cardBackgroundColor="@color/cardView"
             app:cardCornerRadius="10dp"
-            app:contentPaddingBottom="10dp"
+            app:contentPaddingBottom="5dp"
             app:contentPaddingLeft="15dp"
             app:contentPaddingRight="15dp"
             app:contentPaddingTop="10dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/buttons"
+            app:layout_constraintStart_toStartOf="@id/buttons"
             app:layout_constraintTop_toBottomOf="@id/buttons">
 
             <LinearLayout
@@ -124,9 +117,9 @@
                     android:id="@+id/phone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="phone"
+                    android:text="@string/phone"
                     android:textColor="@color/phone"
-                    android:textSize="12dp" />
+                    android:textSize="12sp" />
 
                 <TextView
                     android:id="@+id/phoneNumber"
@@ -146,9 +139,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:text="username"
+                    android:text="@string/username"
                     android:textColor="@color/phone"
-                    android:textSize="12dp" />
+                    android:textSize="12sp" />
 
                 <TextView
                     android:id="@+id/username1"
@@ -168,9 +161,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:text="email"
+                    android:text="@string/email"
                     android:textColor="@color/phone"
-                    android:textSize="12dp" />
+                    android:textSize="12sp" />
 
                 <TextView
                     android:id="@+id/email1"
@@ -190,9 +183,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:text="date of birth"
+                    android:text="@string/date_of_birth"
                     android:textColor="@color/phone"
-                    android:textSize="12dp" />
+                    android:textSize="12sp" />
 
                 <TextView
                     android:id="@+id/dob1"
@@ -212,9 +205,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:text="nationality"
+                    android:text="@string/nationality"
                     android:textColor="@color/phone"
-                    android:textSize="12dp" />
+                    android:textSize="12sp" />
 
                 <TextView
                     android:id="@+id/nationality1"
@@ -234,9 +227,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:text="location"
+                    android:text="@string/location"
                     android:textColor="@color/phone"
-                    android:textSize="12dp" />
+                    android:textSize="12sp" />
 
                 <TextView
                     android:id="@+id/location1"
