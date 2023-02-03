@@ -28,7 +28,6 @@ public class EnterPasswordActivity extends AppCompatActivity {
 
     public static void startForResultExplicit(Activity context, int requestCode) {
         Intent starter = new Intent(context, EnterPasswordActivity.class);
-//        starter.putExtra();
         context.startActivityForResult(starter, requestCode);
     }
 

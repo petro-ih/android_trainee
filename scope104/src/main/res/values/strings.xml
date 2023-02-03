@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">Random Users</string>
+    <string name="call">call</string>
+    <string name="email">mail</string>
+    <string name="map">map</string>
+    <string name="avatarTransition">avatarTransition %s</string>
+    <string name="nameTransition">nameTransition %s</string>
+    <string name="username">username</string>
+    <string name="phone">phone</string>
+    <string name="email1">email</string>
+    <string name="date_of_birth">date of birth</string>
+    <string name="nationality">nationality</string>
+    <string name="location">location</string>
+</resources>
