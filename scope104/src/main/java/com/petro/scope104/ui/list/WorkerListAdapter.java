@@ -9,6 +9,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -23,8 +25,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
-public class WorkerListAdapter extends RecyclerView.Adapter<WorkerListAdapter.WorkerViewHolder> {
-    private final ArrayList<WorkerUi> data = new ArrayList<>();
+public class WorkerListAdapter extends ListAdapter<WorkerUi, WorkerListAdapter.WorkerViewHolder> {
+//    private final ArrayList<WorkerUi> data = new ArrayList<>();
 
     interface OnClickListener {
         void onClick(WorkerUi clickedItem, List<View> transitionView);
@@ -32,25 +34,29 @@ public class WorkerListAdapter extends RecyclerView.Adapter<WorkerListAdapter.Wo
 
     private OnClickListener callback;
 
+    public WorkerListAdapter(){
+        super(new UserDiffCallBack());
+    }
+
     public void setOnClickListener(OnClickListener callback) {
         this.callback = callback;
     }
 
-    @SuppressLint("NotifyDataSetChanged")
-    void setData(List<WorkerUi> newData) {
-        data.clear();
-        data.addAll(newData);
-        notifyDataSetChanged();
-    }
-    void addData(List<WorkerUi> newData) {
-        int previousSize = data.size();
-        data.addAll(newData);
-        notifyItemRangeInserted(previousSize, newData.size());
-    }
+//    @SuppressLint("NotifyDataSetChanged")
+//    void setData(List<WorkerUi> newData) {
+//        data.clear();
+//        data.addAll(newData);
+//        notifyDataSetChanged();
+//    }
+//    void addData(List<WorkerUi> newData) {
+//        int previousSize = data.size();
+//        data.addAll(newData);
+//        notifyItemRangeInserted(previousSize, newData.size());
+//    }
 
-    public ArrayList<WorkerUi> getData() {
-        return data;
-    }
+//    public ArrayList<WorkerUi> getData() {
+//        return data;
+//    }
 
     @NonNull
     @Override
@@ -61,13 +67,13 @@ public class WorkerListAdapter extends RecyclerView.Adapter<WorkerListAdapter.Wo
 
     @Override
     public void onBindViewHolder(@NonNull WorkerViewHolder holder, int position) {
-        holder.bind(data.get(position));
+        holder.bind(getItem(position));
     }
 
-    @Override
-    public int getItemCount() {
-        return data.size();
-    }
+//    @Override
+//    public int getItemCount() {
+//        return data.size();
+//    }
 
     class WorkerViewHolder extends RecyclerView.ViewHolder {
         private final OnClickListener onClickListener;
@@ -87,8 +93,20 @@ public class WorkerListAdapter extends RecyclerView.Adapter<WorkerListAdapter.Wo
             binding.name.setTransitionName(binding.name.getContext().getString(R.string.nameTransition, item.getUsername()));
             itemView.setOnClickListener(v -> {
                 if (callback != null)
-                    onClickListener.onClick(data.get(getAdapterPosition()), Arrays.asList(binding.ivAVATAR, binding.name));
+                    onClickListener.onClick(getItem(getAdapterPosition()), Arrays.asList(binding.ivAVATAR, binding.name));
             });
+        }
+    }
+    private static class UserDiffCallBack extends DiffUtil.ItemCallback<WorkerUi> {
+
+        @Override
+        public boolean areItemsTheSame(@NonNull WorkerUi oldItem, @NonNull WorkerUi newItem) {
+            return oldItem.getUsername().equals(newItem.getUsername());
+        }
+
+        @Override
+        public boolean areContentsTheSame(@NonNull WorkerUi oldItem, @NonNull WorkerUi newItem) {
+            return oldItem.equals(newItem);
         }
     }
 

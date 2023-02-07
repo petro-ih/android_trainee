@@ -2,6 +2,7 @@ package com.petro.scope104.ui;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Objects;
 
 public class WorkerUi implements Serializable {
     private String avatarUrl;
@@ -88,5 +89,18 @@ public class WorkerUi implements Serializable {
 
     public Date getRegistered() {
         return registered;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        WorkerUi workerUi = (WorkerUi) o;
+        return age == workerUi.age && Objects.equals(avatarUrl, workerUi.avatarUrl) && Objects.equals(avatarUrlXXL, workerUi.avatarUrlXXL) && name.equals(workerUi.name) && Objects.equals(dob, workerUi.dob) && Objects.equals(city, workerUi.city) && Objects.equals(phone, workerUi.phone) && username.equals(workerUi.username) && Objects.equals(email, workerUi.email) && Objects.equals(nat, workerUi.nat) && Objects.equals(registered, workerUi.registered);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(avatarUrl, avatarUrlXXL, name, dob, age, city, phone, username, email, nat, registered);
     }
 }

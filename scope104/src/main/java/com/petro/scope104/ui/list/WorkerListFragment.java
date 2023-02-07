@@ -25,12 +25,12 @@ import com.petro.scope104.R;
 import com.petro.scope104.databinding.FragmentWorkersBinding;
 import com.petro.scope104.network.RetrofitInstance;
 import com.petro.scope104.network.response.UserListResponse;
-import com.petro.scope104.network.response.UserResponse;
 import com.petro.scope104.ui.WorkerUi;
 import com.petro.scope104.util.WorkerUIMapper;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import retrofit2.Call;
@@ -38,13 +38,19 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class WorkerListFragment extends Fragment {
+    private static final int PAGE_SIZE = 20;
     private static final String KEY_TYPE = "KEY_TYPE";
     private static final String KEY_DATA = "KEY_DATA";
     private final WorkerListAdapter adapter = new WorkerListAdapter();
     private FragmentWorkersBinding binding;
-    private int i = 0;
+    private int currentPageNumber = 0;
     private boolean isLoading = false;
     private boolean isLastPage = false;
+
+    public interface ListFilter{
+        Gender getCurrentSelectedGender();
+        Set<String> getCountries();
+    }
 
     public static Fragment newInstance(ListType type) {
         Bundle args = new Bundle();
@@ -57,7 +63,7 @@ public class WorkerListFragment extends Fragment {
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putSerializable(KEY_DATA, adapter.getData());
+        outState.putSerializable(KEY_DATA, new ArrayList<>(adapter.getCurrentList()));
     }
 
     @Nullable
@@ -101,7 +107,7 @@ public class WorkerListFragment extends Fragment {
             ((WorkerListInteractions) getActivity()).onItemClick(clickedItem, activityOptions);
         });
         if (savedInstanceState != null) {
-            adapter.setData((List<WorkerUi>) savedInstanceState.getSerializable(KEY_DATA));
+            adapter.submitList((List<WorkerUi>) savedInstanceState.getSerializable(KEY_DATA));
         } else loadMore(false);
 
         if (rv.getLayoutManager() instanceof LinearLayoutManager) {
@@ -124,29 +130,42 @@ public class WorkerListFragment extends Fragment {
             });
         }
     }
-
+    public void refresh(){
+        loadMore(true);
+    }
     private void loadMore(boolean refresh) {
         Log.d("userlist", "refreshData: ");
         setLoading(true);
         if (refresh) {
-            i = 0;
+            currentPageNumber = 0;
         }
-        RetrofitInstance.INSTANCE.service.listRepos("ua", i, 10, "seed" + i++).enqueue(new Callback<UserListResponse>() {
+        String gender = null;
+        String countries = null;
+        if(getActivity() instanceof ListFilter){
+            ListFilter listFilter = (ListFilter) getActivity();
+            gender = listFilter.getCurrentSelectedGender().serverName;
+            countries = String.join(",", listFilter.getCountries());
+        }
+        RetrofitInstance.INSTANCE.service.listRepos(countries, currentPageNumber++, PAGE_SIZE, gender).enqueue(new Callback<UserListResponse>() {
             @Override
             public void onResponse(Call<UserListResponse> call, Response<UserListResponse> response) {
                 setLoading(false);
                 List<WorkerUi> list = response.body() != null ? response.body().results.stream().map(WorkerUIMapper::map).collect(Collectors.toList()) : new ArrayList<>();
                 isLastPage = list.size() < 10;
                 if (refresh) {
-                    adapter.setData(list);
-                } else adapter.addData(list);
+                    adapter.submitList(list);
+                } else {
+                    ArrayList<WorkerUi> newList = new ArrayList<>(adapter.getCurrentList());
+                    newList.addAll(list);
+                    adapter.submitList(newList);
+                }
             }
 
             @Override
             public void onFailure(Call<UserListResponse> call, Throwable t) {
                 setLoading(false);
                 if (refresh) {
-                    adapter.setData(new ArrayList<>());
+                    adapter.submitList(new ArrayList<>());
                 }
                 t.printStackTrace();
                 Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
@@ -156,6 +175,9 @@ public class WorkerListFragment extends Fragment {
 
     private void setLoading(boolean isLoading) {
         this.isLoading = isLoading;
+        if(binding == null){
+            return;
+        }
         binding.progress.setVisibility(isLoading ? View.VISIBLE : View.GONE);
     }
 
