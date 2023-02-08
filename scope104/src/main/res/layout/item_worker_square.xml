@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.petro.scope104.util.SquareCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/card_view_item"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="4dp"
+    app:cardCornerRadius="4dp"
+    app:cardElevation="1dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/root"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true">
+
+        <ImageView
+            android:id="@+id/ivAVATAR"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:cropToPadding="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@tools:sample/avatars" />
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:background="@drawable/bg_avatar" />
+
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:maxLines="2"
+            android:autoSizeTextType="uniform"
+            android:autoSizeMaxTextSize="24sp"
+            android:autoSizeMinTextSize="6dp"
+            android:autoSizeStepGranularity="1sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@id/ivAVATAR"
+            app:layout_constraintVertical_chainStyle="spread"
+            tools:text="@tools:sample/first_names"
+            android:textColor="@color/white"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.petro.scope104.util.SquareCardView>

@@ -19,7 +19,7 @@
             android:paddingBottom="24dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:itemCount="100"
-            tools:listitem="@layout/item_workers"
+            tools:listitem="@layout/item_worker"
             tools:orientation="vertical"
             tools:spanCount="2" />
 

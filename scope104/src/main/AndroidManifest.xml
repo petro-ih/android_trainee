@@ -19,6 +19,7 @@
         </activity>
         <activity
             android:name=".ui.details.UserDetailsActivity"
+            android:theme="@style/Theme.Trainee.Details"
             android:exported="true" />
     </application>
 

@@ -41,7 +41,7 @@ public class WorkerListFragment extends Fragment {
     private static final int PAGE_SIZE = 20;
     private static final String KEY_TYPE = "KEY_TYPE";
     private static final String KEY_DATA = "KEY_DATA";
-    private final WorkerListAdapter adapter = new WorkerListAdapter();
+    private WorkerListAdapter adapter;
     private FragmentWorkersBinding binding;
     private int currentPageNumber = 0;
     private boolean isLoading = false;
@@ -84,18 +84,21 @@ public class WorkerListFragment extends Fragment {
             loadMore(true);
             pullToRefresh.setRefreshing(false);
         });
-        int spanCount = 2;
+        int spanCount = 3;
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            spanCount = 3;
+            spanCount = 6;
         }
         switch (listType) {
             case LINEAR:
+                adapter = new WorkerListAdapter(WorkerListAdapter.VIEW_TYPE_NORMAL);
                 rv.setLayoutManager(new LinearLayoutManager(getContext()));
                 break;
             case GRID:
+                adapter = new WorkerListAdapter(WorkerListAdapter.VIEW_TYPE_SQUARE);
                 rv.setLayoutManager(new GridLayoutManager(getContext(), spanCount));
                 break;
             case STAGGERED:
+                adapter = new WorkerListAdapter(WorkerListAdapter.VIEW_TYPE_SQUARE);
                 rv.setLayoutManager(new StaggeredGridLayoutManager(spanCount, StaggeredGridLayoutManager.VERTICAL));
                 break;
         }

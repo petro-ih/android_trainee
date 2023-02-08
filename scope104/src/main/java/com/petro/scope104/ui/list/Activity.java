@@ -63,14 +63,17 @@ public class Activity extends AppCompatActivity implements WorkerListFragment.Wo
                 List<SelectItem> items = Arrays
                         .stream(Gender.values())
                         .filter(gen -> gen != Gender.UNKNOWN)
-                        .map(gen -> new SelectItem(gen.displayName, currentSelectedGender == gen))
+                        .map(gen -> new SelectItem(gen.displayName, currentSelectedGender == gen, gen))
                         .collect(Collectors.toList());
 
                 fragment = SelectBottomSheetFragment.newInstance(REQUEST_CODE_GENDER, "SELECT SEX", items);
             } break;
             case R.id.city: {
                 List<SelectItem> items = RetrofitInstance.INSTANCE.supportLocations.stream()
-                        .map(current -> new SelectItem(current, currentSelectedCountries.contains(current)))
+                        .map(current -> {
+                            Locale locale = new Locale("", current);
+                            return new SelectItem(locale.getDisplayCountry(), currentSelectedCountries.contains(current), current);
+                        })
                         .collect(Collectors.toList());
                 fragment = SelectBottomSheetFragment.newInstance(REQUEST_CODE_COUNTRY, "Select Country", items);
             } break;
@@ -78,9 +81,15 @@ public class Activity extends AppCompatActivity implements WorkerListFragment.Wo
                 return false;
         }
         getSupportFragmentManager().beginTransaction()
-                .add(R.id.container, fragment)
+                .replace(R.id.container, fragment)
                 .commit();
         return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        getSupportFragmentManager();
+        super.onBackPressed();
     }
 
     @Override
@@ -91,11 +100,7 @@ public class Activity extends AppCompatActivity implements WorkerListFragment.Wo
                 for (SelectItem item : items) {
                     if (item.getValue()) {
                         checkedCount++;
-                        if (item.getTitle().equals(Gender.MALE.displayName)) {
-                            currentSelectedGender = Gender.MALE;
-                        } else {
-                            currentSelectedGender = Gender.FEMALE;
-                        }
+                        currentSelectedGender = ((Gender) item.getObject());
                     }
                 }
                 if (checkedCount == 0 || checkedCount == 2) {
@@ -105,8 +110,9 @@ public class Activity extends AppCompatActivity implements WorkerListFragment.Wo
             case REQUEST_CODE_COUNTRY:
                 List<String> selected =  items
                         .stream()
-                        .filter(current -> current.getValue())
-                        .map(current -> current.getTitle())
+                        .filter(SelectItem::getValue)
+                        .map(SelectItem::getObject)
+                        .map(Object::toString)
                         .collect(Collectors.toList());
                 currentSelectedCountries.clear();
                 currentSelectedCountries.addAll(selected);
