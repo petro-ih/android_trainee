@@ -24,14 +24,15 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 public class Activity extends AppCompatActivity implements WorkerListFragment.WorkerListInteractions, SelectBottomSheetFragment.OnItemSelected, WorkerListFragment.ListFilter {
     private static final int REQUEST_CODE_GENDER = 1;
     private static final int REQUEST_CODE_COUNTRY = 2;
-    private Gender currentSelectedGender = Gender.UNKNOWN;
     private final HashSet<String> currentSelectedCountries = new HashSet<>();
+    private Gender currentSelectedGender = Gender.UNKNOWN;
     private ActivityScope104Binding binding;
 
     @Override
@@ -67,7 +68,8 @@ public class Activity extends AppCompatActivity implements WorkerListFragment.Wo
                         .collect(Collectors.toList());
 
                 fragment = SelectBottomSheetFragment.newInstance(REQUEST_CODE_GENDER, "SELECT SEX", items);
-            } break;
+            }
+            break;
             case R.id.city: {
                 List<SelectItem> items = RetrofitInstance.INSTANCE.supportLocations.stream()
                         .map(current -> {
@@ -76,7 +78,8 @@ public class Activity extends AppCompatActivity implements WorkerListFragment.Wo
                         })
                         .collect(Collectors.toList());
                 fragment = SelectBottomSheetFragment.newInstance(REQUEST_CODE_COUNTRY, "Select Country", items);
-            } break;
+            }
+            break;
             default:
                 return false;
         }
@@ -108,7 +111,7 @@ public class Activity extends AppCompatActivity implements WorkerListFragment.Wo
                 }
                 break;
             case REQUEST_CODE_COUNTRY:
-                List<String> selected =  items
+                List<String> selected = items
                         .stream()
                         .filter(SelectItem::getValue)
                         .map(SelectItem::getObject)
@@ -120,7 +123,7 @@ public class Activity extends AppCompatActivity implements WorkerListFragment.Wo
             default:
                 throw new IllegalStateException("Unexpected value: " + requestCode);
         }
-        for (int i = 0; i < binding.pager.getAdapter().getCount(); i++) {
+        for (int i = 0; i < Objects.requireNonNull(binding.pager.getAdapter()).getCount(); i++) {
             Object object = binding.pager.getAdapter().instantiateItem(binding.pager, i);
             if (object instanceof WorkerListFragment) {
                 ((WorkerListFragment) object).refresh();
@@ -137,5 +140,6 @@ public class Activity extends AppCompatActivity implements WorkerListFragment.Wo
     public Set<String> getCountries() {
         return currentSelectedCountries;
     }
+
 }
 

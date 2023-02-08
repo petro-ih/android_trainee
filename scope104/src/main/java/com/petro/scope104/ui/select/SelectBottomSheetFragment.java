@@ -46,7 +46,9 @@ public class SelectBottomSheetFragment extends BottomSheetDialogFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        binding.title.setText(getArguments().getString(KEY_TITLE));
+        binding.title.setText(requireArguments().getString(KEY_TITLE));
+        assert getArguments() != null;
+        @SuppressWarnings("unchecked")
         final ArrayList<SelectItem> stringArrayList = (ArrayList<SelectItem>) getArguments().getSerializable(KEY_ITEMS);
         binding.recyclerView.setAdapter(adapter);
         adapter.submitList(stringArrayList);

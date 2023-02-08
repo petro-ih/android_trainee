@@ -30,6 +30,7 @@ import com.petro.scope104.util.WorkerUIMapper;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -76,10 +77,11 @@ public class WorkerListFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        assert getArguments() != null;
         ListType listType = ((ListType) getArguments().getSerializable(KEY_TYPE));
         RecyclerView rv = binding.listOfWorkers;
         final SwipeRefreshLayout pullToRefresh = binding.pullToRefresh;
-        pullToRefresh.setColorSchemeColors(ContextCompat.getColor(getContext(), R.color.purple_500));
+        pullToRefresh.setColorSchemeColors(ContextCompat.getColor(requireContext(), R.color.purple_500));
         pullToRefresh.setOnRefreshListener(() -> {
             loadMore(true);
             pullToRefresh.setRefreshing(false);
@@ -107,9 +109,10 @@ public class WorkerListFragment extends Fragment {
             Pair<View, String> p1 = Pair.create(transitionView.get(0), transitionView.get(0).getTransitionName());
             Pair<View, String> p2 = Pair.create(transitionView.get(1), transitionView.get(1).getTransitionName());
             ActivityOptions activityOptions = ActivityOptions.makeSceneTransitionAnimation(getActivity(), p1, p2);
-            ((WorkerListInteractions) getActivity()).onItemClick(clickedItem, activityOptions);
+            ((WorkerListInteractions) requireActivity()).onItemClick(clickedItem, activityOptions);
         });
         if (savedInstanceState != null) {
+            //noinspection unchecked
             adapter.submitList((List<WorkerUi>) savedInstanceState.getSerializable(KEY_DATA));
         } else loadMore(false);
 
@@ -151,7 +154,7 @@ public class WorkerListFragment extends Fragment {
         }
         RetrofitInstance.INSTANCE.service.listRepos(countries, currentPageNumber++, PAGE_SIZE, gender).enqueue(new Callback<UserListResponse>() {
             @Override
-            public void onResponse(Call<UserListResponse> call, Response<UserListResponse> response) {
+            public void onResponse(@NonNull Call<UserListResponse> call, @NonNull Response<UserListResponse> response) {
                 setLoading(false);
                 List<WorkerUi> list = response.body() != null ? response.body().results.stream().map(WorkerUIMapper::map).collect(Collectors.toList()) : new ArrayList<>();
                 isLastPage = list.size() < 10;
@@ -165,7 +168,7 @@ public class WorkerListFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<UserListResponse> call, Throwable t) {
+            public void onFailure(@NonNull Call<UserListResponse> call, @NonNull Throwable t) {
                 setLoading(false);
                 if (refresh) {
                     adapter.submitList(new ArrayList<>());

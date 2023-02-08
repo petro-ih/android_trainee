@@ -20,18 +20,6 @@ public class IntentHelper {
         return new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", phone, null));
     }
 
-    public Intent getSMS(String phone, String text) {
-        final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.fromParts("sms", phone, null));
-        intent.putExtra("sms_body", text);
-        return intent;
-    }
-
-    public Intent getSite(String url) {
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setData(Uri.parse(url));
-        return intent;
-    }
-
     public Intent getEmail(String email, String subject, String message, @Nullable String filePath) {
         final Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("message/rfc822");
