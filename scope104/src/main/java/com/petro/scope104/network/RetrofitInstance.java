@@ -27,7 +27,6 @@ public class RetrofitInstance {
                 .baseUrl("https://randomuser.me/")
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
-
         service = retrofit.create(GitHubService.class);
     }
 }

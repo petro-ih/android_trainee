@@ -5,6 +5,7 @@ import android.app.ActivityOptions;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -14,6 +15,8 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.petro.scope104.R;
 import com.petro.scope104.databinding.ActivityScope104Binding;
+import com.petro.scope104.db.DataBase;
+import com.petro.scope104.db.entity.UserEntity;
 import com.petro.scope104.network.RetrofitInstance;
 import com.petro.scope104.ui.WorkerUi;
 import com.petro.scope104.ui.details.UserDetailsActivity;
@@ -21,6 +24,7 @@ import com.petro.scope104.ui.select.SelectBottomSheetFragment;
 import com.petro.scope104.ui.select.SelectItem;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -42,6 +46,9 @@ public class Activity extends AppCompatActivity implements WorkerListFragment.Wo
         setContentView(binding.getRoot());
         ViewPager viewPager = binding.pager;
         viewPager.setAdapter(new MyFragmentAdapter(getSupportFragmentManager()));
+        binding.test.setOnClickListener(v -> {
+
+        });
     }
 
     @Override

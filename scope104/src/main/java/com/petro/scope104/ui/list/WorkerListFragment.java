@@ -20,17 +20,19 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.petro.scope104.util.PaginationScrollListener;
 import com.petro.scope104.R;
 import com.petro.scope104.databinding.FragmentWorkersBinding;
+import com.petro.scope104.db.DataBase;
+import com.petro.scope104.db.entity.CountryEntity;
+import com.petro.scope104.db.entity.UserEntity;
 import com.petro.scope104.network.RetrofitInstance;
 import com.petro.scope104.network.response.UserListResponse;
 import com.petro.scope104.ui.WorkerUi;
+import com.petro.scope104.util.PaginationScrollListener;
 import com.petro.scope104.util.WorkerUIMapper;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -47,11 +49,6 @@ public class WorkerListFragment extends Fragment {
     private int currentPageNumber = 0;
     private boolean isLoading = false;
     private boolean isLastPage = false;
-
-    public interface ListFilter{
-        Gender getCurrentSelectedGender();
-        Set<String> getCountries();
-    }
 
     public static Fragment newInstance(ListType type) {
         Bundle args = new Bundle();
@@ -136,9 +133,11 @@ public class WorkerListFragment extends Fragment {
             });
         }
     }
-    public void refresh(){
+
+    public void refresh() {
         loadMore(true);
     }
+
     private void loadMore(boolean refresh) {
         Log.d("userlist", "refreshData: ");
         setLoading(true);
@@ -147,7 +146,7 @@ public class WorkerListFragment extends Fragment {
         }
         String gender = null;
         String countries = null;
-        if(getActivity() instanceof ListFilter){
+        if (getActivity() instanceof ListFilter) {
             ListFilter listFilter = (ListFilter) getActivity();
             gender = listFilter.getCurrentSelectedGender().serverName;
             countries = String.join(",", listFilter.getCountries());
@@ -156,7 +155,11 @@ public class WorkerListFragment extends Fragment {
             @Override
             public void onResponse(@NonNull Call<UserListResponse> call, @NonNull Response<UserListResponse> response) {
                 setLoading(false);
-                List<WorkerUi> list = response.body() != null ? response.body().results.stream().map(WorkerUIMapper::map).collect(Collectors.toList()) : new ArrayList<>();
+                List<WorkerUi> list = response.body() != null ? response.body().results.stream().map(WorkerUIMapper::mapNetworkToUi).collect(Collectors.toList()) : new ArrayList<>();
+                List<UserEntity> listDB = list.stream().map(WorkerUIMapper::mapUiToDatabase).collect(Collectors.toList());
+                List<CountryEntity> countryList = list.stream().map(WorkerUi::getNat).map(WorkerUIMapper::mapUiToCountryEntity).collect(Collectors.toList());
+                DataBase.getDataBase(getContext()).userDao().insert(listDB);
+                DataBase.getDataBase(getContext()).countryDao().insert(countryList);
                 isLastPage = list.size() < 10;
                 if (refresh) {
                     adapter.submitList(list);
@@ -181,10 +184,16 @@ public class WorkerListFragment extends Fragment {
 
     private void setLoading(boolean isLoading) {
         this.isLoading = isLoading;
-        if(binding == null){
+        if (binding == null) {
             return;
         }
         binding.progress.setVisibility(isLoading ? View.VISIBLE : View.GONE);
+    }
+
+    public interface ListFilter {
+        Gender getCurrentSelectedGender();
+
+        Set<String> getCountries();
     }
 
     interface WorkerListInteractions {

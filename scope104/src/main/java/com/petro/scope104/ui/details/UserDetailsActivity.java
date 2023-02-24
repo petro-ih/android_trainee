@@ -47,7 +47,7 @@ public class UserDetailsActivity extends AppCompatActivity {
         binding.email1.setText(workerUi.getEmail());
         String dateText = String.format(Locale.getDefault(), "%s, %d years", formater.format(workerUi.getDob()), workerUi.getAge());
         binding.dob1.setText(dateText);
-        binding.nationality1.setText(workerUi.getNat());
+        binding.nationality1.setText(workerUi.getNatCountry());
         binding.location1.setText(workerUi.getCity());
         String dateText1 = formater.format(workerUi.getRegistered());
         binding.registered.setText(dateText1);
