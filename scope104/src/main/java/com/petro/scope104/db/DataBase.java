@@ -12,7 +12,7 @@ import com.petro.scope104.db.dao.UserDao;
 import com.petro.scope104.db.entity.CountryEntity;
 import com.petro.scope104.db.entity.UserEntity;
 
-@Database(entities = {UserEntity.class, CountryEntity.class}, version = 2)
+@Database(entities = {UserEntity.class, CountryEntity.class}, version = 3)
 @TypeConverters({Converters.class})
 public abstract class DataBase extends RoomDatabase {
     private static DataBase dataBase;

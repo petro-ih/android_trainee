@@ -26,6 +26,10 @@ public class UserEntity {
     @ColumnInfo
     public int age;
     @ColumnInfo
+    public String city;
+    @ColumnInfo
+    public String country;
+    @ColumnInfo
     public String nat;
     @ColumnInfo
     public String phone;
@@ -40,7 +44,7 @@ public class UserEntity {
     public UserEntity(){}
 
 
-    public UserEntity(@NonNull String username, String avatarUrl, String avatarUrlXXL, String firstName, String lastName, Date dob, int age, String nat, String phone, String email, Date registered, Boolean isMale) {
+    public UserEntity(@NonNull String username, String avatarUrl, String avatarUrlXXL, String firstName, String lastName, Date dob, int age, String city, String country, String nat, String phone, String email, Date registered, Boolean isMale) {
         this.username = username;
         this.avatarUrl = avatarUrl;
         this.avatarUrlXXL = avatarUrlXXL;
@@ -48,6 +52,8 @@ public class UserEntity {
         this.lastName = lastName;
         this.dob = dob;
         this.age = age;
+        this.city = city;
+        this.country = country;
         this.nat = nat;
         this.phone = phone;
         this.email = email;

@@ -13,11 +13,14 @@ public class WorkerUIMapper {
     }
 
     public static UserEntity mapUiToDatabase(WorkerUi workerUi) {
-        return new UserEntity(workerUi.getUsername(), workerUi.getAvatarUrl(), workerUi.getAvatarUrlXXL(), workerUi.getFirstName(), workerUi.getLastName(), workerUi.getDob(), workerUi.getAge(), workerUi.getNat(), workerUi.getPhone(), workerUi.getEmail(), workerUi.getRegistered(), workerUi.isMale());
+        return new UserEntity(workerUi.getUsername(), workerUi.getAvatarUrl(), workerUi.getAvatarUrlXXL(), workerUi.getFirstName(), workerUi.getLastName(), workerUi.getDob(), workerUi.getAge(), workerUi.getCity(), workerUi.getCountry(), workerUi.getNat(), workerUi.getPhone(), workerUi.getEmail(), workerUi.getRegistered(), workerUi.isMale());
     }
 
     public static CountryEntity mapUiToCountryEntity(String countryCode) {
         Locale loc = new Locale("", countryCode);
         return new CountryEntity(countryCode, loc.getDisplayCountry());
+    }
+    public static WorkerUi mapDatabaseToUi(UserEntity userEntity) {
+        return new WorkerUi(userEntity.avatarUrl, userEntity.avatarUrlXXL, userEntity.firstName, userEntity.lastName, userEntity.dob, userEntity.age, userEntity.city, userEntity.country, userEntity.phone, userEntity.username, userEntity.email, userEntity.nat, userEntity.registered, userEntity.isMale);
     }
 }

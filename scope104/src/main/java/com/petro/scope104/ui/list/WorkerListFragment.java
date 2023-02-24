@@ -14,6 +14,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -23,6 +25,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.petro.scope104.R;
 import com.petro.scope104.databinding.FragmentWorkersBinding;
 import com.petro.scope104.db.DataBase;
+import com.petro.scope104.db.dao.UserDao;
 import com.petro.scope104.db.entity.CountryEntity;
 import com.petro.scope104.db.entity.UserEntity;
 import com.petro.scope104.network.RetrofitInstance;
@@ -146,21 +149,32 @@ public class WorkerListFragment extends Fragment {
         }
         String gender = null;
         String countries = null;
+        Boolean isMale = null;
+        List<String> countryList = new ArrayList<>();
         if (getActivity() instanceof ListFilter) {
             ListFilter listFilter = (ListFilter) getActivity();
             gender = listFilter.getCurrentSelectedGender().serverName;
+            if (listFilter.getCurrentSelectedGender() != Gender.UNKNOWN) {
+                isMale = listFilter.getCurrentSelectedGender() == Gender.MALE;
+            }
             countries = String.join(",", listFilter.getCountries());
+            countryList.addAll(listFilter.getCountries());
         }
-        RetrofitInstance.INSTANCE.service.listRepos(countries, currentPageNumber++, PAGE_SIZE, gender).enqueue(new Callback<UserListResponse>() {
-            @Override
-            public void onResponse(@NonNull Call<UserListResponse> call, @NonNull Response<UserListResponse> response) {
+
+        boolean fromDB = true;
+        if (fromDB) {
+            UserDao userDao = DataBase.getDataBase(getContext()).userDao();
+            LiveData<List<UserEntity>> usersResult;
+            if (countryList.isEmpty()) {
+                usersResult = userDao.loadUsers(currentPageNumber++, PAGE_SIZE, isMale);
+            } else {
+                usersResult = userDao.loadUsers(currentPageNumber++, PAGE_SIZE, isMale, countryList);
+            }
+
+            usersResult.observe(getViewLifecycleOwner(), userEntities -> {
+                List<WorkerUi> list = userEntities.stream().map(WorkerUIMapper::mapDatabaseToUi).collect(Collectors.toList());
                 setLoading(false);
-                List<WorkerUi> list = response.body() != null ? response.body().results.stream().map(WorkerUIMapper::mapNetworkToUi).collect(Collectors.toList()) : new ArrayList<>();
-                List<UserEntity> listDB = list.stream().map(WorkerUIMapper::mapUiToDatabase).collect(Collectors.toList());
-                List<CountryEntity> countryList = list.stream().map(WorkerUi::getNat).map(WorkerUIMapper::mapUiToCountryEntity).collect(Collectors.toList());
-                DataBase.getDataBase(getContext()).userDao().insert(listDB);
-                DataBase.getDataBase(getContext()).countryDao().insert(countryList);
-                isLastPage = list.size() < 10;
+                isLastPage = list.size() < PAGE_SIZE;
                 if (refresh) {
                     adapter.submitList(list);
                 } else {
@@ -168,18 +182,38 @@ public class WorkerListFragment extends Fragment {
                     newList.addAll(list);
                     adapter.submitList(newList);
                 }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<UserListResponse> call, @NonNull Throwable t) {
-                setLoading(false);
-                if (refresh) {
-                    adapter.submitList(new ArrayList<>());
+            });
+        } else {
+            RetrofitInstance.INSTANCE.service.listRepos(countries, currentPageNumber++, PAGE_SIZE, gender).enqueue(new Callback<UserListResponse>() {
+                @Override
+                public void onResponse(@NonNull Call<UserListResponse> call, @NonNull Response<UserListResponse> response) {
+                    setLoading(false);
+                    List<WorkerUi> list = response.body() != null ? response.body().results.stream().map(WorkerUIMapper::mapNetworkToUi).collect(Collectors.toList()) : new ArrayList<>();
+                    List<UserEntity> listDB = list.stream().map(WorkerUIMapper::mapUiToDatabase).collect(Collectors.toList());
+                    List<CountryEntity> countryList = list.stream().map(WorkerUi::getNat).map(WorkerUIMapper::mapUiToCountryEntity).collect(Collectors.toList());
+                    DataBase.getDataBase(getContext()).userDao().insert(listDB);
+                    DataBase.getDataBase(getContext()).countryDao().insert(countryList);
+                    isLastPage = list.size() < 10;
+                    if (refresh) {
+                        adapter.submitList(list);
+                    } else {
+                        ArrayList<WorkerUi> newList = new ArrayList<>(adapter.getCurrentList());
+                        newList.addAll(list);
+                        adapter.submitList(newList);
+                    }
                 }
-                t.printStackTrace();
-                Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
+
+                @Override
+                public void onFailure(@NonNull Call<UserListResponse> call, @NonNull Throwable t) {
+                    setLoading(false);
+                    if (refresh) {
+                        adapter.submitList(new ArrayList<>());
+                    }
+                    t.printStackTrace();
+                    Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
     }
 
     private void setLoading(boolean isLoading) {
