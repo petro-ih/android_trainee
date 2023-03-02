@@ -3,7 +3,6 @@ package com.petro.scope104.presentation.list;
 import android.app.ActivityOptions;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,30 +20,20 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.petro.scope104.R;
-import com.petro.scope104.data.UserDataRepository;
-import com.petro.scope104.data.UserDataSource;
-import com.petro.scope104.data.db.DataBase;
-import com.petro.scope104.data.db.UserDataSourceDbImpl;
-import com.petro.scope104.data.network.RetrofitInstance;
-import com.petro.scope104.data.network.UserDataSourceNetworkImpl;
 import com.petro.scope104.databinding.FragmentWorkersBinding;
 import com.petro.scope104.presentation.WorkerUi;
 import com.petro.scope104.util.PaginationScrollListener;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 
 public class WorkerListFragment extends Fragment {
-    private static final int PAGE_SIZE = 20;
     private static final String KEY_TYPE = "KEY_TYPE";
     private static final String KEY_DATA = "KEY_DATA";
     private final boolean isLastPage = false;
     private WorkerListAdapter adapter;
     private FragmentWorkersBinding binding;
-    private int currentPageNumber = 0;
-    private boolean isLoading = false;
-    private UserDataRepository userDataRepository;
+    private WorkerListViewModel viewModel;
 
     public static Fragment newInstance(ListType type) {
         Bundle args = new Bundle();
@@ -62,10 +52,8 @@ public class WorkerListFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        DataBase dataBase = DataBase.getDataBase(getContext());
-        UserDataSource networkDataSource = new UserDataSourceNetworkImpl(RetrofitInstance.INSTANCE.service);
-        UserDataSource dataBaseDataSource = new UserDataSourceDbImpl(dataBase.userDao(), dataBase.countryDao());
-        userDataRepository = new UserDataRepository(dataBaseDataSource, networkDataSource);
+        viewModel = new ViewModelProvider(this).get(WorkerListViewModel.class);
+        viewModel.init(getContext());
     }
 
     @Nullable
@@ -112,10 +100,9 @@ public class WorkerListFragment extends Fragment {
             ActivityOptions activityOptions = ActivityOptions.makeSceneTransitionAnimation(getActivity(), p1, p2);
             ((WorkerListInteractions) requireActivity()).onItemClick(clickedItem, activityOptions);
         });
-        if (savedInstanceState != null) {
-            //noinspection unchecked
-            adapter.submitList((List<WorkerUi>) savedInstanceState.getSerializable(KEY_DATA));
-        } else loadMore(false);
+        if (savedInstanceState == null) {
+            loadMore(false);
+        }
 
         if (rv.getLayoutManager() instanceof LinearLayoutManager) {
             LinearLayoutManager linearLayoutManager = ((LinearLayoutManager) rv.getLayoutManager());
@@ -132,10 +119,13 @@ public class WorkerListFragment extends Fragment {
 
                 @Override
                 public boolean isLoading() {
-                    return isLoading;
+                    return Boolean.TRUE.equals(viewModel.getIsLoadingLiveData().getValue());
                 }
             });
         }
+
+        viewModel.getIsLoadingLiveData().observe(getViewLifecycleOwner(), this::setLoading);
+        viewModel.getUsers().observe(getViewLifecycleOwner(), adapter::submitList);
     }
 
     public void refresh() {
@@ -143,32 +133,13 @@ public class WorkerListFragment extends Fragment {
     }
 
     private void loadMore(boolean refresh) {
-        Log.d("userlist", "refreshData: ");
-        setLoading(true);
-        if (refresh) {
-            currentPageNumber = 0;
-        }
-        Gender gender = Gender.UNKNOWN;
-        List<String> countryList = new ArrayList<>();
         if (getActivity() instanceof ListFilter) {
             ListFilter listFilter = (ListFilter) getActivity();
-            gender = listFilter.getCurrentSelectedGender();
-            countryList.addAll(listFilter.getCountries());
+            viewModel.loadMore(refresh, listFilter.getCurrentSelectedGender(), listFilter.getCountries());
         }
-        setLoading(true);
-        userDataRepository.loadUsers(currentPageNumber++, PAGE_SIZE, gender, countryList).observe(getViewLifecycleOwner(), workerUis -> {
-            ArrayList<WorkerUi> newList = new ArrayList<>(adapter.getCurrentList());
-            newList.addAll(workerUis);
-            adapter.submitList(newList);
-            setLoading(false);
-        });
     }
 
     private void setLoading(boolean isLoading) {
-        this.isLoading = isLoading;
-        if (binding == null) {
-            return;
-        }
         binding.progress.setVisibility(isLoading ? View.VISIBLE : View.GONE);
     }
 
@@ -181,5 +152,4 @@ public class WorkerListFragment extends Fragment {
     interface WorkerListInteractions {
         void onItemClick(WorkerUi workerUi, ActivityOptions activityOptions);
     }
-
 }
