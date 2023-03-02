@@ -28,7 +28,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class Activity extends AppCompatActivity implements WorkerListFragment.WorkerListInteractions, SelectBottomSheetFragment.OnItemSelected, WorkerListFragment.ListFilter {
+public class MainActivity extends AppCompatActivity implements WorkerListFragment.WorkerListInteractions, SelectBottomSheetFragment.OnItemSelected, WorkerListFragment.ListFilter {
     private static final int REQUEST_CODE_GENDER = 1;
     private static final int REQUEST_CODE_COUNTRY = 2;
     private final HashSet<String> currentSelectedCountries = new HashSet<>();

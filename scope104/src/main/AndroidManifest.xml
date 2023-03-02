@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Trainee">
         <activity
-            android:name=".presentation.list.Activity"
+            android:name=".presentation.list.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
