@@ -1,9 +1,9 @@
 package com.petro.scope104.util;
 
-import com.petro.scope104.db.entity.CountryEntity;
-import com.petro.scope104.db.entity.UserEntity;
-import com.petro.scope104.network.response.UserResponse;
-import com.petro.scope104.ui.WorkerUi;
+import com.petro.scope104.data.db.entity.CountryEntity;
+import com.petro.scope104.data.db.entity.UserEntity;
+import com.petro.scope104.data.network.response.UserResponse;
+import com.petro.scope104.presentation.WorkerUi;
 
 import java.util.Locale;
 

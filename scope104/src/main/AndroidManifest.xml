@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Trainee">
         <activity
-            android:name=".ui.list.Activity"
+            android:name=".presentation.list.Activity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -18,7 +18,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.details.UserDetailsActivity"
+            android:name=".presentation.details.UserDetailsActivity"
             android:theme="@style/Theme.Trainee.Details"
             android:exported="true" />
     </application>
