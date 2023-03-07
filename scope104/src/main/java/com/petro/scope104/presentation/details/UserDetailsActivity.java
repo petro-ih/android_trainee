@@ -17,18 +17,21 @@ import com.bumptech.glide.request.target.Target;
 import com.petro.scope104.util.IntentHelper;
 import com.petro.scope104.R;
 import com.petro.scope104.databinding.ActivityUserDetailsBinding;
-import com.petro.scope104.presentation.WorkerUi;
+import com.petro.scope104.domain.entity.WorkerEntity;
 
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class UserDetailsActivity extends AppCompatActivity {
     private static final String KEY_WORKER = "KEY_WORKER";
     private ActivityUserDetailsBinding binding;
 
-    public static void start(Context context, WorkerUi workerUi, ActivityOptions activityOptions) {
+    public static void start(Context context, WorkerEntity workerEntity, ActivityOptions activityOptions) {
         Intent starter = new Intent(context, UserDetailsActivity.class);
-        starter.putExtra(KEY_WORKER, workerUi);
+        starter.putExtra(KEY_WORKER, workerEntity);
         context.startActivity(starter, activityOptions.toBundle());
     }
 
@@ -39,17 +42,17 @@ public class UserDetailsActivity extends AppCompatActivity {
         binding = ActivityUserDetailsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        WorkerUi workerUi = ((WorkerUi) getIntent().getSerializableExtra(KEY_WORKER));
+        WorkerEntity workerEntity = ((WorkerEntity) getIntent().getSerializableExtra(KEY_WORKER));
 
-        binding.name.setText(workerUi.getName());
-        binding.phoneNumber.setText(workerUi.getPhone());
-        binding.username1.setText(workerUi.getUsername());
-        binding.email1.setText(workerUi.getEmail());
-        String dateText = String.format(Locale.getDefault(), "%s, %d years", formater.format(workerUi.getDob()), workerUi.getAge());
+        binding.name.setText(workerEntity.getName());
+        binding.phoneNumber.setText(workerEntity.getPhone());
+        binding.username1.setText(workerEntity.getUsername());
+        binding.email1.setText(workerEntity.getEmail());
+        String dateText = String.format(Locale.getDefault(), "%s, %d years", formater.format(workerEntity.getDob()), workerEntity.getAge());
         binding.dob1.setText(dateText);
-        binding.nationality1.setText(workerUi.getNatCountry());
-        binding.location1.setText(workerUi.getCity());
-        String dateText1 = formater.format(workerUi.getRegistered());
+        binding.nationality1.setText(workerEntity.getNatCountry());
+        binding.location1.setText(workerEntity.getCity());
+        String dateText1 = formater.format(workerEntity.getRegistered());
         binding.registered.setText(dateText1);
         binding.btnMail.ivIcon.setImageResource(R.drawable.ic_mail);
         binding.btnMail.tvText.setText(R.string.email);
@@ -57,13 +60,13 @@ public class UserDetailsActivity extends AppCompatActivity {
         binding.btnMap.tvText.setText(R.string.map);
 
         IntentHelper intentHelper = new IntentHelper(this);
-        binding.btnPhone.getRoot().setOnClickListener(v -> startActivity(intentHelper.getPhoneIntent(workerUi.getPhone())));
-        binding.btnMail.getRoot().setOnClickListener(v -> startActivity(intentHelper.getEmail(workerUi.getEmail(), null, null, null)));
-        binding.btnMap.getRoot().setOnClickListener(v -> startActivity(intentHelper.getMaps(workerUi.getCity())));
-        binding.profileImage.setTransitionName(getString(R.string.avatarTransition, workerUi.getUsername()));
-        binding.name.setTransitionName(getString(R.string.nameTransition, workerUi.getUsername()));
+        binding.btnPhone.getRoot().setOnClickListener(v -> startActivity(intentHelper.getPhoneIntent(workerEntity.getPhone())));
+        binding.btnMail.getRoot().setOnClickListener(v -> startActivity(intentHelper.getEmail(workerEntity.getEmail(), null, null, null)));
+        binding.btnMap.getRoot().setOnClickListener(v -> startActivity(intentHelper.getMaps(workerEntity.getCity())));
+        binding.profileImage.setTransitionName(getString(R.string.avatarTransition, workerEntity.getUsername()));
+        binding.name.setTransitionName(getString(R.string.nameTransition, workerEntity.getUsername()));
         postponeEnterTransition();
-        Glide.with(this).load(workerUi.getAvatarUrlXXL()).circleCrop().addListener(new RequestListener<Drawable>() {
+        Glide.with(this).load(workerEntity.getAvatarUrlXXL()).circleCrop().addListener(new RequestListener<Drawable>() {
             @Override
             public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
                 startPostponedEnterTransition();

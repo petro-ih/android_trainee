@@ -21,12 +21,15 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.petro.scope104.R;
 import com.petro.scope104.databinding.FragmentWorkersBinding;
-import com.petro.scope104.presentation.WorkerUi;
+import com.petro.scope104.domain.entity.WorkerEntity;
 import com.petro.scope104.util.PaginationScrollListener;
 
 import java.util.ArrayList;
 import java.util.Set;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class WorkerListFragment extends Fragment {
     private static final String KEY_TYPE = "KEY_TYPE";
     private static final String KEY_DATA = "KEY_DATA";
@@ -53,7 +56,6 @@ public class WorkerListFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         viewModel = new ViewModelProvider(this).get(WorkerListViewModel.class);
-        viewModel.init(getContext());
     }
 
     @Nullable
@@ -150,6 +152,6 @@ public class WorkerListFragment extends Fragment {
     }
 
     interface WorkerListInteractions {
-        void onItemClick(WorkerUi workerUi, ActivityOptions activityOptions);
+        void onItemClick(WorkerEntity workerEntity, ActivityOptions activityOptions);
     }
 }

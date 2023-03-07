@@ -9,24 +9,28 @@ import com.petro.scope104.data.db.dao.CountryDao;
 import com.petro.scope104.data.db.dao.UserDao;
 import com.petro.scope104.data.db.entity.CountryEntity;
 import com.petro.scope104.data.db.entity.UserEntity;
-import com.petro.scope104.presentation.WorkerUi;
+import com.petro.scope104.domain.entity.WorkerEntity;
 import com.petro.scope104.presentation.list.Gender;
-import com.petro.scope104.util.WorkerUIMapper;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.inject.Inject;
+
 public class UserDataSourceDbImpl implements UserDataSource {
     private final UserDao userDao;
     private final CountryDao countryDao;
+    private final DbConverter dbConverter;
 
-    public UserDataSourceDbImpl(UserDao userDao, CountryDao countryDao) {
+    @Inject
+    public UserDataSourceDbImpl(UserDao userDao, CountryDao countryDao, DbConverter dbConverter) {
         this.userDao = userDao;
         this.countryDao = countryDao;
+        this.dbConverter = dbConverter;
     }
 
     @Override
-    public LiveData<List<WorkerUi>> loadUsers(int pageNumber, int pageSize, @NonNull Gender gender, @NonNull List<String> countries) {
+    public LiveData<List<WorkerEntity>> loadUsers(int pageNumber, int pageSize, @NonNull Gender gender, @NonNull List<String> countries) {
         LiveData<List<UserEntity>> usersResult;
         Boolean isMale = null;
         if (gender == Gender.MALE) {
@@ -39,13 +43,13 @@ public class UserDataSourceDbImpl implements UserDataSource {
         } else {
             usersResult = userDao.loadUsers(pageNumber, pageSize, isMale, countries);
         }
-        return Transformations.map(usersResult, input -> input.stream().map(WorkerUIMapper::mapDatabaseToUi).collect(Collectors.toList()));
+        return Transformations.map(usersResult, input -> input.stream().map(dbConverter::mapDatabaseToUi).collect(Collectors.toList()));
     }
 
     @Override
-    public void saveUsers(List<WorkerUi> users) {
-        List<UserEntity> listDB = users.stream().map(WorkerUIMapper::mapUiToDatabase).collect(Collectors.toList());
-        List<CountryEntity> countryList = users.stream().map(WorkerUi::getNat).map(WorkerUIMapper::mapUiToCountryEntity).collect(Collectors.toList());
+    public void saveUsers(List<WorkerEntity> users) {
+        List<UserEntity> listDB = users.stream().map(dbConverter::mapUiToDatabase).collect(Collectors.toList());
+        List<CountryEntity> countryList = users.stream().map(WorkerEntity::getNat).map(dbConverter::mapUiToCountryEntity).collect(Collectors.toList());
         userDao.insert(listDB);
         countryDao.insert(countryList);
     }

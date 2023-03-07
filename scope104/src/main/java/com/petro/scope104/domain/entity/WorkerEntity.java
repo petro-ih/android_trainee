@@ -1,11 +1,11 @@
-package com.petro.scope104.presentation;
+package com.petro.scope104.domain.entity;
 
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Objects;
 
-public class WorkerUi implements Serializable {
+public class WorkerEntity implements Serializable {
     private String avatarUrl;
     private final String avatarUrlXXL;
     private String firstName;
@@ -21,7 +21,7 @@ public class WorkerUi implements Serializable {
     private final Date registered;
     private final boolean isMale;
 
-    public WorkerUi(String avatarUrl, String avatarUrlXXL, String firstName, String lastName, Date dob, int age, String city, String country, String phone, String username, String email, String nat, Date registered, boolean isMale) {
+    public WorkerEntity(String avatarUrl, String avatarUrlXXL, String firstName, String lastName, Date dob, int age, String city, String country, String phone, String username, String email, String nat, Date registered, boolean isMale) {
         this.avatarUrl = avatarUrl;
         this.avatarUrlXXL = avatarUrlXXL;
         this.firstName = firstName;
@@ -131,8 +131,8 @@ public class WorkerUi implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        WorkerUi workerUi = (WorkerUi) o;
-        return age == workerUi.age && Objects.equals(avatarUrl, workerUi.avatarUrl) && Objects.equals(avatarUrlXXL, workerUi.avatarUrlXXL) && firstName.equals(workerUi.firstName) && lastName.equals(workerUi.lastName) && Objects.equals(dob, workerUi.dob) && Objects.equals(city, workerUi.city) && Objects.equals(country, workerUi.country) && Objects.equals(phone, workerUi.phone) && username.equals(workerUi.username) && Objects.equals(email, workerUi.email) && Objects.equals(nat, workerUi.nat) && Objects.equals(registered, workerUi.registered) && isMale == workerUi.isMale;
+        WorkerEntity workerEntity = (WorkerEntity) o;
+        return age == workerEntity.age && Objects.equals(avatarUrl, workerEntity.avatarUrl) && Objects.equals(avatarUrlXXL, workerEntity.avatarUrlXXL) && firstName.equals(workerEntity.firstName) && lastName.equals(workerEntity.lastName) && Objects.equals(dob, workerEntity.dob) && Objects.equals(city, workerEntity.city) && Objects.equals(country, workerEntity.country) && Objects.equals(phone, workerEntity.phone) && username.equals(workerEntity.username) && Objects.equals(email, workerEntity.email) && Objects.equals(nat, workerEntity.nat) && Objects.equals(registered, workerEntity.registered) && isMale == workerEntity.isMale;
     }
 
     @Override

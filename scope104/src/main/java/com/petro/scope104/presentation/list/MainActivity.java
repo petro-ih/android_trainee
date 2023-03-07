@@ -15,7 +15,7 @@ import androidx.viewpager.widget.ViewPager;
 import com.petro.scope104.R;
 import com.petro.scope104.databinding.ActivityScope104Binding;
 import com.petro.scope104.data.network.RetrofitInstance;
-import com.petro.scope104.presentation.WorkerUi;
+import com.petro.scope104.domain.entity.WorkerEntity;
 import com.petro.scope104.presentation.details.UserDetailsActivity;
 import com.petro.scope104.presentation.select.SelectBottomSheetFragment;
 import com.petro.scope104.presentation.select.SelectItem;
@@ -28,6 +28,10 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import dagger.hilt.android.AndroidEntryPoint;
+import dagger.hilt.android.HiltAndroidApp;
+
+@AndroidEntryPoint
 public class MainActivity extends AppCompatActivity implements WorkerListFragment.WorkerListInteractions, SelectBottomSheetFragment.OnItemSelected, WorkerListFragment.ListFilter {
     private static final int REQUEST_CODE_GENDER = 1;
     private static final int REQUEST_CODE_COUNTRY = 2;
@@ -42,14 +46,11 @@ public class MainActivity extends AppCompatActivity implements WorkerListFragmen
         setContentView(binding.getRoot());
         ViewPager viewPager = binding.pager;
         viewPager.setAdapter(new MyFragmentAdapter(getSupportFragmentManager()));
-        binding.test.setOnClickListener(v -> {
-
-        });
     }
 
     @Override
-    public void onItemClick(WorkerUi workerUi, ActivityOptions activityOptions) {
-        UserDetailsActivity.start(this, workerUi, activityOptions);
+    public void onItemClick(WorkerEntity workerEntity, ActivityOptions activityOptions) {
+        UserDetailsActivity.start(this, workerEntity, activityOptions);
     }
 
     @Override
@@ -74,7 +75,7 @@ public class MainActivity extends AppCompatActivity implements WorkerListFragmen
             }
             break;
             case R.id.city: {
-                List<SelectItem> items = RetrofitInstance.INSTANCE.supportLocations.stream()
+                List<SelectItem> items = RetrofitInstance.supportLocations.stream()
                         .map(current -> {
                             Locale locale = new Locale("", current);
                             return new SelectItem(locale.getDisplayCountry(), currentSelectedCountries.contains(current), current);
