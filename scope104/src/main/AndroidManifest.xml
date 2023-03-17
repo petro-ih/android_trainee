@@ -3,6 +3,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <application
+        android:name=".RandomUsersApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -10,7 +11,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Trainee">
         <activity
-            android:name=".ui.list.Activity"
+            android:name=".presentation.list.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -18,7 +19,8 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.details.UserDetailsActivity"
+            android:name=".presentation.details.UserDetailsActivity"
+            android:theme="@style/Theme.Trainee.Details"
             android:exported="true" />
     </application>
 
