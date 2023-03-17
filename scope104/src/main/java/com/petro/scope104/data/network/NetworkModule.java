@@ -2,7 +2,6 @@ package com.petro.scope104.data.network;
 
 import com.google.gson.Gson;
 import com.petro.scope104.data.UserDataSource;
-import com.petro.scope104.data.network.livedataadapter.LiveDataCallAdapterFactory;
 import com.petro.scope104.data.qualifier.Network;
 
 import javax.inject.Singleton;
@@ -14,6 +13,7 @@ import dagger.hilt.components.SingletonComponent;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
+ import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 @Module
@@ -26,7 +26,13 @@ public abstract class NetworkModule {
         logging.setLevel(HttpLoggingInterceptor.Level.BODY);
         OkHttpClient client = new OkHttpClient.Builder().addInterceptor(logging).build();
 
-        return new Retrofit.Builder().client(client).baseUrl("https://randomuser.me/").addConverterFactory(GsonConverterFactory.create(gson)).addCallAdapterFactory(new LiveDataCallAdapterFactory()).build();
+        return new Retrofit
+                .Builder()
+                .client(client)
+                .baseUrl("https://randomuser.me/")
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
+                .build();
     }
 
     @Provides
