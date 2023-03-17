@@ -14,6 +14,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import io.reactivex.rxjava3.core.Observable;
+
 public class UserDataRepository {
     private final UserDataSource dataBaseDataSource;
     private final UserDataSource networkDataSource;
@@ -27,14 +29,14 @@ public class UserDataRepository {
         this.networkDataSource = networkDataSource;
     }
 
-    public LiveData<List<WorkerEntity>> loadUsers(int pageNumber, int pageSize, @NonNull Gender gender, @NonNull List<String> countries) {
-        final LiveData<List<WorkerEntity>> dbLiveData = dataBaseDataSource.loadUsers(pageNumber, pageSize, gender, countries);
-        return Transformations.switchMap(dbLiveData, dbInput -> {
+    public Observable<List<WorkerEntity>> loadUsers(int pageNumber, int pageSize, @NonNull Gender gender, @NonNull List<String> countries) {
+        final Observable<List<WorkerEntity>> dbLiveData = dataBaseDataSource.loadUsers(pageNumber, pageSize, gender, countries);
+        return dbLiveData.switchMap(dbInput -> {
             if (dbInput.size() >= pageSize) {
-                return new MutableLiveData<>(dbInput);
+                return Observable.just(dbInput);
             } else {
-                final LiveData<List<WorkerEntity>> networkLiveData = networkDataSource.loadUsers(pageNumber, pageSize, gender, countries);
-                return Transformations.map(networkLiveData, networkInput -> {
+                final Observable<List<WorkerEntity>> networkLiveData = networkDataSource.loadUsers(pageNumber, pageSize, gender, countries);
+                return networkLiveData.map(networkInput -> {
                     dataBaseDataSource.saveUsers(networkInput);
                     return networkInput;
                 });

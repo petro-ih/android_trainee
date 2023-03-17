@@ -13,6 +13,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+import io.reactivex.rxjava3.core.Observable;
+
 @Dao
 public interface UserDao {
     @Query(
@@ -23,7 +25,7 @@ public interface UserDao {
             "LIMIT :limit " +
             "OFFSET (:page * :limit) "
     )
-    LiveData<List<UserEntity>> loadUsers(int page, int limit, @Nullable Boolean isMale, @NotNull List<String> nationality);
+    Observable<List<UserEntity>> loadUsers(int page, int limit, @Nullable Boolean isMale, @NotNull List<String> nationality);
 
     @Query(
             "SELECT * " +
@@ -33,7 +35,7 @@ public interface UserDao {
                     "LIMIT :limit " +
                     "OFFSET (:page * :limit) "
     )
-    LiveData<List<UserEntity>> loadUsers(int page, int limit, @Nullable Boolean isMale);
+    Observable<List<UserEntity>> loadUsers(int page, int limit, @Nullable Boolean isMale);
 
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

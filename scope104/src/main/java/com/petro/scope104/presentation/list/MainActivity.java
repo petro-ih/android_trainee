@@ -29,7 +29,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import dagger.hilt.android.AndroidEntryPoint;
-import dagger.hilt.android.HiltAndroidApp;
 
 @AndroidEntryPoint
 public class MainActivity extends AppCompatActivity implements WorkerListFragment.WorkerListInteractions, SelectBottomSheetFragment.OnItemSelected, WorkerListFragment.ListFilter {

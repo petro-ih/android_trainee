@@ -17,6 +17,8 @@ import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
+import io.reactivex.rxjava3.core.Observable;
+
 public class UserDataSourceDbImpl implements UserDataSource {
     private final UserDao userDao;
     private final CountryDao countryDao;
@@ -30,8 +32,8 @@ public class UserDataSourceDbImpl implements UserDataSource {
     }
 
     @Override
-    public LiveData<List<WorkerEntity>> loadUsers(int pageNumber, int pageSize, @NonNull Gender gender, @NonNull List<String> countries) {
-        LiveData<List<UserEntity>> usersResult;
+    public Observable<List<WorkerEntity>> loadUsers(int pageNumber, int pageSize, @NonNull Gender gender, @NonNull List<String> countries) {
+        Observable<List<UserEntity>> usersResult;
         Boolean isMale = null;
         if (gender == Gender.MALE) {
             isMale = true;
@@ -43,7 +45,7 @@ public class UserDataSourceDbImpl implements UserDataSource {
         } else {
             usersResult = userDao.loadUsers(pageNumber, pageSize, isMale, countries);
         }
-        return Transformations.map(usersResult, input -> input.stream().map(dbConverter::mapDatabaseToUi).collect(Collectors.toList()));
+        return usersResult.map(input -> input.stream().map(dbConverter::mapDatabaseToUi).collect(Collectors.toList()));
     }
 
     @Override

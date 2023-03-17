@@ -24,7 +24,6 @@ public abstract class DataBaseModule {
     @Singleton
     public static DataBase provideDataBase(@ApplicationContext Context context) {
        return Room.databaseBuilder(context, DataBase.class, "userDB")
-               .allowMainThreadQueries()
                .fallbackToDestructiveMigration()
                .build();
     }

@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">scope106</string>
+    <string name="ex1">Ex1</string>
+    <string name="ex2">Ex2</string>
+    <string name="ex3">Ex3</string>
+    <string name="ex4">Ex4</string>
+    <string name="ex5">Ex5</string>
+    <string name="buffer">buffer</string>
+    <string name="map">map</string>
+    <string name="ex8">Ex8</string>
+    <string name="zip">zip</string>
+</resources>

@@ -17,6 +17,10 @@ import java.util.Set;
 import javax.inject.Inject;
 
 import dagger.hilt.android.lifecycle.HiltViewModel;
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 @HiltViewModel
 public class WorkerListViewModel extends ViewModel {
@@ -24,6 +28,7 @@ public class WorkerListViewModel extends ViewModel {
     private final MutableLiveData<List<WorkerEntity>> usersLiveData = new MutableLiveData<>(new ArrayList<>());
     private final MutableLiveData<Boolean> isLoadingLiveData = new MutableLiveData<>(false);
     private final UserDataRepository userDataRepository;
+    private final CompositeDisposable compositeDisposable = new CompositeDisposable();
     private int currentPageNumber = 0;
 
     @Inject
@@ -49,16 +54,21 @@ public class WorkerListViewModel extends ViewModel {
         if (refresh) {
             currentPageNumber = 0;
         }
-        userDataRepository.loadUsers(currentPageNumber++, PAGE_SIZE, gender, new ArrayList<>(countries)).observeForever(workerUis -> {
-            List<WorkerEntity> newList;
-            if (refresh) {
-                newList = new ArrayList<>();
-            } else {
-                newList = new ArrayList<>(Objects.requireNonNull(usersLiveData.getValue()));
-            }
-            newList.addAll(workerUis);
-            usersLiveData.postValue(newList);
-            setLoading(false);
-        });
+        Disposable disposable = userDataRepository
+                .loadUsers(currentPageNumber++, PAGE_SIZE, gender, new ArrayList<>(countries))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(workerUis -> {
+                    List<WorkerEntity> newList;
+                    if (refresh) {
+                        newList = new ArrayList<>();
+                    } else {
+                        newList = new ArrayList<>(Objects.requireNonNull(usersLiveData.getValue()));
+                    }
+                    newList.addAll(workerUis);
+                    usersLiveData.postValue(newList);
+                    setLoading(false);
+        }, e -> Log.d("LOGGG", "Error", e));
+        compositeDisposable.add(disposable);
     }
 }
